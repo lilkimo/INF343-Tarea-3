@@ -1,0 +1,16 @@
+syntax = "proto3";
+package grpc;
+
+option go_package = "https://github.com/lilkimo/INF343-Tarea-3/protoBrokerInformantes";
+
+/*Comando de mensaje*/
+message MensajeToBroker{
+}
+/*Respuesta*/
+message Respuesta{
+    string direccion = 1;
+}
+
+service ConnToBroker {
+    rpc ObtenerDireccion(MensajeToBroker) returns (Respuesta);
+}

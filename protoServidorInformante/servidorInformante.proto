@@ -1,0 +1,23 @@
+syntax = "proto3";
+package grpc;
+
+option go_package = "https://github.com/lilkimo/INF343-Tarea-3/protoServidorInformantes";
+
+
+message MensajeToServidor { //Cambiar al protoServer
+    string comando = 1;
+    string nombre_planeta = 2;
+    string nombre_ciudad = 3;
+    int32 nuevo_valor = 4;
+}
+message Respuesta{
+    repeated int32 direccion = 1;
+}
+
+
+service ConnToServidor {
+    rpc UpdateName (MensajeToServidor) returns (Respuesta);
+    rpc UpdateNumber (MensajeToServidor) returns (Respuesta);
+    rpc AddCity (MensajeToServidor) returns (Respuesta);
+    rpc DeleteCity (MensajeToServidor) returns (Respuesta);
+}

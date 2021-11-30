@@ -1,0 +1,19 @@
+syntax = "proto3";
+package grpc;
+
+option go_package = "https://github.com/lilkimo/INF343-Tarea-3/protoServidorBroker";
+
+message MensajeLeia {
+    string comando = 1;
+    string nombre_planeta = 2;
+    string nombre_ciudad = 3;
+}
+
+message RespuestaLeia {
+    int32 numero_rebeldes = 1;
+    repeated int32 vector = 2;
+}
+
+service ConnToServidor {
+    rpc LeiaGetNumberRebelds (MensajeLeia) returns (RespuestaLeia);
+}

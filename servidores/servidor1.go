@@ -2,17 +2,17 @@ package main
 
 import (
 	"bufio"
-	"context"
+	//"context"
 	"fmt"
+	"io/ioutil"
+
 	"log"
-	"net"
+	//"net"
 	"os"
 	"strings"
-
 	//pbSvBk "INF343-Tarea-3\protoServidorBroker"
 	//pbSvInf "INF343-Tarea-3\protoServidorInformante"
-
-	"google.golang.org/grpc"
+	//"google.golang.org/grpc"
 )
 
 const (
@@ -22,6 +22,7 @@ const (
 var reg_planetas []string
 var log_planetas []string
 
+/*
 type DataNodeServer struct {
 	pb.UnimplementedNameDataServiceServer
 }
@@ -33,6 +34,7 @@ func (s *DataNodeServer) RegistrarJugadas(ctx context.Context, in *pb.JugadaToDa
 	jgs = obtenerJugada(in.IdJugador, in.Etapa)
 	return &pb.RespuestaJugada{Jugadas: jgs, Cantidad: int32(len(jgs))}, nil
 }
+*/
 
 func valueInSlice(value string, list []string) bool {
 	for _, b := range list {
@@ -43,9 +45,8 @@ func valueInSlice(value string, list []string) bool {
 	return false
 }
 
-func registroPlanetario(planeta string, ciudad string, valor int32) {
+func command(comando string, planeta string, ciudad string, valor int32) {
 	filename := fmt.Sprintf("servidores/%s.txt", planeta)
-	str := fmt.Sprintf("%s %s %d\n", planeta, ciudad, valor)
 
 	if valueInSlice(planeta, reg_planetas) {
 		//do nothing
@@ -55,10 +56,108 @@ func registroPlanetario(planeta string, ciudad string, valor int32) {
 		check(err)
 		f.Close()
 	}
-	f, err := os.OpenFile(filename, os.O_APPEND, 0600)
+	/*
+		Ejecutar comandos aca
+	*/
+}
+
+func DeleteCity(planeta string, ciudad string) {
+	filename := fmt.Sprintf("servidores/%s.txt", planeta)
+	var curr, curr_planet, curr_city string
+	var num int32
+	f, err := os.ReadFile(filename)
+	ft := string(f)
 	check(err)
-	f.WriteString(str)
-	f.Close()
+
+	if !strings.Contains(string(ft), ciudad) {
+		log.Printf("Ciudad %s no existe.", ciudad)
+		return
+	}
+
+	scanner := bufio.NewScanner(strings.NewReader(ft))
+
+	// optionally, resize scanner's capacity for lines over 64K, see next example
+	for scanner.Scan() {
+		curr = scanner.Text()
+		fmt.Sscanf(curr, "%s %s %d", &curr_planet, &curr_city, &num)
+		if curr_planet == planeta && curr_city == ciudad {
+			break
+		}
+	}
+	new_file := strings.Replace(ft, curr+"\n", "", 1)
+	err = ioutil.WriteFile(filename, []byte(new_file), 0666)
+	check(err)
+}
+
+func AddCity(planeta string, ciudad string, valor int32) {
+	filename := fmt.Sprintf("servidores/%s.txt", planeta)
+
+	ft, err1 := os.ReadFile(filename)
+	check(err1)
+	if strings.Contains(string(ft), ciudad) {
+		log.Printf("Ciudad %s ya existe.", ciudad)
+	} else {
+		f, err2 := os.OpenFile(filename, os.O_APPEND, 0600)
+		check(err2)
+		str := fmt.Sprintf("%s %s %d\n", planeta, ciudad, valor)
+		f.WriteString(str)
+		f.Close()
+	}
+}
+
+func UpdateNumber(planeta string, ciudad string, nuevo_valor int32) {
+	filename := fmt.Sprintf("servidores/%s.txt", planeta)
+	var curr, curr_planet, curr_city string
+	var num int32
+	ft, err := os.ReadFile(filename)
+	check(err)
+
+	if !strings.Contains(string(ft), ciudad) {
+		log.Printf("Ciudad %s no existe. ¿Quiza un ataque imperial?", ciudad)
+		return
+	}
+
+	scanner := bufio.NewScanner(strings.NewReader(string(ft)))
+
+	// optionally, resize scanner's capacity for lines over 64K, see next example
+	for scanner.Scan() {
+		curr = scanner.Text()
+		fmt.Sscanf(curr, "%s %s %d", &curr_planet, &curr_city, &num)
+		if curr_planet == planeta && curr_city == ciudad {
+			break
+		}
+	}
+
+	new := fmt.Sprintf("%s %s %d", planeta, ciudad, nuevo_valor)
+	new_file := strings.Replace(string(ft), curr, new, 1)
+
+	err = ioutil.WriteFile(filename, []byte(new_file), 0666)
+	check(err)
+}
+
+func UpdateName(planeta string, ciudad string, nuevo_valor string) {
+	filename := fmt.Sprintf("servidores/%s.txt", planeta)
+	var curr, curr_planet, curr_city string
+	var num int32
+	f, err := os.ReadFile(filename)
+	ft := string(f)
+	check(err)
+
+	scanner := bufio.NewScanner(strings.NewReader(ft))
+
+	// optionally, resize scanner's capacity for lines over 64K, see next example
+	for scanner.Scan() {
+		curr = scanner.Text()
+		fmt.Sscanf(curr, "%s %s %d", &curr_planet, &curr_city, &num)
+		if curr_planet == planeta && curr_city == ciudad {
+			break
+		}
+	}
+	new := fmt.Sprintf("%s %s %d", planeta, nuevo_valor, num)
+	new_file := strings.Replace(ft, curr, new, 1)
+
+	err = ioutil.WriteFile(filename, []byte(new_file), 0666)
+	check(err)
 }
 
 func logPlanetario(comando string, planeta string, ciudad string, valor int32) {
@@ -125,14 +224,17 @@ func check(err error) {
 }
 
 func main() {
-	lis, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatalf("fatal Error: %v", err)
-	}
-	s := grpc.NewServer()
-	pb.RegisterNameDataServiceServer(s, &DataNodeServer{})
-	log.Printf("server listening at %v", lis.Addr())
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("fatal Error: %v", err)
-	}
+
+	/*
+		lis, err := net.Listen("tcp", port)
+		if err != nil {
+			log.Fatalf("fatal Error: %v", err)
+		}
+		s := grpc.NewServer()
+		pb.RegisterNameDataServiceServer(s, &DataNodeServer{})
+		log.Printf("server listening at %v", lis.Addr())
+		if err := s.Serve(lis); err != nil {
+			log.Fatalf("fatal Error: %v", err)
+		}
+	*/
 }

@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	port = ":50053"
+	port = ":50061"
 )
 
 var reg_planetas []string
@@ -226,19 +226,19 @@ func check(err error) {
 func main() {
 	command("AddCity", "coruscant", "temploJedi", 12)
 	command("AddCity", "coruscant", "senado", 23)
-	command("UpdateName", "coruscant", "senado:sewers", 0)
-	command("DeleteCity", "coruscant", "temploJedi", 0)
+	//command("UpdateName", "coruscant", "senado:sewers", 0)
+	//command("DeleteCity", "coruscant", "temploJedi", 0)
 
 	/*
-		lis, err := net.Listen("tcp", port)
-		if err != nil {
-			log.Fatalf("fatal Error: %v", err)
-		}
-		s := grpc.NewServer()
-		pb.RegisterNameDataServiceServer(s, &DataNodeServer{})
-		log.Printf("server listening at %v", lis.Addr())
-		if err := s.Serve(lis); err != nil {
-			log.Fatalf("fatal Error: %v", err)
-		}
-	*/
+	lis, err := net.Listen("tcp", port)
+	if err != nil {
+		log.Fatalf("fatal Error: %v", err)
+	}
+	s := grpc.NewServer()
+	pb.RegisterNameDataServiceServer(s, &DataNodeServer{})
+	log.Printf("server listening at %v", lis.Addr())
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("fatal Error: %v", err)
+	}*/
+	
 }

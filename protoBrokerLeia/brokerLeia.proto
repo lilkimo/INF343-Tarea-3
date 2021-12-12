@@ -8,11 +8,13 @@ message MensajeToBroker {
     string comando = 1;
     string nombre_planeta = 2;
     string nombre_ciudad = 3;
+    string ip_servidor_fulcrum = 4;
 }
 
 message Respuesta {
     int32 numero_rebeldes = 1;
     repeated int32 vector = 2;
+    string ip_servidor_fulcrum = 3;
 }
 
 service ConnToBroker {

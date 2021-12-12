@@ -4,14 +4,16 @@ package grpc;
 option go_package = "https://github.com/lilkimo/INF343-Tarea-3/protoServidorInformantes";
 
 
-message MensajeToServidor { //Cambiar al protoServer
+message MensajeToServidor {
     string comando = 1;
     string nombre_planeta = 2;
     string nombre_ciudad = 3;
     int32 nuevo_valor = 4;
 }
+
 message Respuesta{
-    repeated int32 direccion = 1;
+    repeated int32 vector = 1;
+    string ip_servidor_fulcrum = 2;
 }
 
 

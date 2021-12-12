@@ -5,9 +5,10 @@ option go_package = "https://github.com/lilkimo/INF343-Tarea-3/protoBrokerInform
 
 /*Comando de mensaje*/
 message MensajeToBroker{
+    string ipServidorFulcrum = 1;
 }
 /*Respuesta*/
-message Respuesta{
+message Respuesta {
     string direccion = 1;
 }
 

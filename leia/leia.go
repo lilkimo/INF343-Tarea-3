@@ -19,7 +19,7 @@ func main() {
 	var arg2 string;
 
 	for {
-		fmt.Scanf("%s %s %s", &comando, &arg1, &arg2)
+		fmt.Scanf("%s %s %s\n", &comando, &arg1, &arg2)
 		if (comando != "GetNumberRebelds") || (arg1 == "") || (arg2 == "") {
 			fmt.Println("Entrada inválida, intente nuevamente.")
 		} else {

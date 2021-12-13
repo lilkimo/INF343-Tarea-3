@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConnToServidorFromBrokerClient interface {
-	LeiaGetNumberRebelds(ctx context.Context, in *MensajeLeia, opts ...grpc.CallOption) (*RespuestaLeia, error)
+	LeiaGetNumberRebelds(ctx context.Context, in *MensajeLeia, opts ...grpc.CallOption) (*ServidorRespuestaLeia, error)
 }
 
 type connToServidorFromBrokerClient struct {
@@ -29,8 +29,8 @@ func NewConnToServidorFromBrokerClient(cc grpc.ClientConnInterface) ConnToServid
 	return &connToServidorFromBrokerClient{cc}
 }
 
-func (c *connToServidorFromBrokerClient) LeiaGetNumberRebelds(ctx context.Context, in *MensajeLeia, opts ...grpc.CallOption) (*RespuestaLeia, error) {
-	out := new(RespuestaLeia)
+func (c *connToServidorFromBrokerClient) LeiaGetNumberRebelds(ctx context.Context, in *MensajeLeia, opts ...grpc.CallOption) (*ServidorRespuestaLeia, error) {
+	out := new(ServidorRespuestaLeia)
 	err := c.cc.Invoke(ctx, "/grpc.ConnToServidorFromBroker/LeiaGetNumberRebelds", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (c *connToServidorFromBrokerClient) LeiaGetNumberRebelds(ctx context.Contex
 // All implementations must embed UnimplementedConnToServidorFromBrokerServer
 // for forward compatibility
 type ConnToServidorFromBrokerServer interface {
-	LeiaGetNumberRebelds(context.Context, *MensajeLeia) (*RespuestaLeia, error)
+	LeiaGetNumberRebelds(context.Context, *MensajeLeia) (*ServidorRespuestaLeia, error)
 	mustEmbedUnimplementedConnToServidorFromBrokerServer()
 }
 
@@ -50,7 +50,7 @@ type ConnToServidorFromBrokerServer interface {
 type UnimplementedConnToServidorFromBrokerServer struct {
 }
 
-func (UnimplementedConnToServidorFromBrokerServer) LeiaGetNumberRebelds(context.Context, *MensajeLeia) (*RespuestaLeia, error) {
+func (UnimplementedConnToServidorFromBrokerServer) LeiaGetNumberRebelds(context.Context, *MensajeLeia) (*ServidorRespuestaLeia, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LeiaGetNumberRebelds not implemented")
 }
 func (UnimplementedConnToServidorFromBrokerServer) mustEmbedUnimplementedConnToServidorFromBrokerServer() {

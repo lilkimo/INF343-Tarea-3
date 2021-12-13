@@ -40,7 +40,7 @@ type vectorPlaneta struct {
 
 var vectores [] vectorPlaneta
 
-func (s *serverBroker) LeiaGetNumberRebelds(ctx context.Context, in *pbBroker.MensajeLeia) (*pbBroker.RespuestaLeia, error) {
+func (s *serverBroker) LeiaGetNumberRebelds(ctx context.Context, in *pbBroker.MensajeLeia) (*pbBroker.ServidorRespuestaLeia, error) {
 	v := []int32{0,0,0}
 	regciudad := get_city_data(in.NombrePlaneta, in.NombreCiudad)
 	str := strings.SplitAfter(regciudad, " ")
@@ -51,7 +51,7 @@ func (s *serverBroker) LeiaGetNumberRebelds(ctx context.Context, in *pbBroker.Me
 			break
 		}
 	}
-	return &pbBroker.RespuestaLeia{NumeroRebeldes: int32(n), Vector: v, IpServidorFulcrum: "localhost"+port}, nil
+	return &pbBroker.ServidorRespuestaLeia{NumeroRebeldes: int32(n), Vector: v, IpServidorFulcrum: "localhost"+port}, nil
 }
 
 

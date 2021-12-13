@@ -66,7 +66,7 @@ func main() {
 	if ok {
 		// Aquí habría que aplicar Monotonic Reads, ni idea de cómo la verdad xd.
 		// Me imagino que hay que revisar el reloj o weás así no sé nada xuxetumare.
-		rS, err := c.GetNumberRebelds(ctx, &pb.MensajeToBroker{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, IpServidorFulcrum: val.servidor})
+		rS, err := c.GetNumberRebelds(ctx, &pb.MensajeToBrokerFromLeia{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, IpServidorFulcrum: val.servidor})
 		if err != nil {
 			log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
 		}
@@ -83,7 +83,7 @@ func main() {
 		}
 	} else {
 		// Si la weá no existe la chanta así tal cual. 
-		rS, err := c.GetNumberRebelds(ctx, &pb.MensajeToBroker{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, IpServidorFulcrum: "vacia"})
+		rS, err := c.GetNumberRebelds(ctx, &pb.MensajeToBrokerFromLeia{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, IpServidorFulcrum: "vacia"})
 		if err != nil {
 			log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
 		}

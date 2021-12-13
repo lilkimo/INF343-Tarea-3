@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConnToBrokerFromLeiaClient interface {
-	GetNumberRebelds(ctx context.Context, in *MensajeToBroker, opts ...grpc.CallOption) (*Respuesta, error)
+	GetNumberRebelds(ctx context.Context, in *MensajeToBrokerFromLeia, opts ...grpc.CallOption) (*RespuestaLeia, error)
 }
 
 type connToBrokerFromLeiaClient struct {
@@ -29,8 +29,8 @@ func NewConnToBrokerFromLeiaClient(cc grpc.ClientConnInterface) ConnToBrokerFrom
 	return &connToBrokerFromLeiaClient{cc}
 }
 
-func (c *connToBrokerFromLeiaClient) GetNumberRebelds(ctx context.Context, in *MensajeToBroker, opts ...grpc.CallOption) (*Respuesta, error) {
-	out := new(Respuesta)
+func (c *connToBrokerFromLeiaClient) GetNumberRebelds(ctx context.Context, in *MensajeToBrokerFromLeia, opts ...grpc.CallOption) (*RespuestaLeia, error) {
+	out := new(RespuestaLeia)
 	err := c.cc.Invoke(ctx, "/grpc.ConnToBrokerFromLeia/GetNumberRebelds", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (c *connToBrokerFromLeiaClient) GetNumberRebelds(ctx context.Context, in *M
 // All implementations must embed UnimplementedConnToBrokerFromLeiaServer
 // for forward compatibility
 type ConnToBrokerFromLeiaServer interface {
-	GetNumberRebelds(context.Context, *MensajeToBroker) (*Respuesta, error)
+	GetNumberRebelds(context.Context, *MensajeToBrokerFromLeia) (*RespuestaLeia, error)
 	mustEmbedUnimplementedConnToBrokerFromLeiaServer()
 }
 
@@ -50,7 +50,7 @@ type ConnToBrokerFromLeiaServer interface {
 type UnimplementedConnToBrokerFromLeiaServer struct {
 }
 
-func (UnimplementedConnToBrokerFromLeiaServer) GetNumberRebelds(context.Context, *MensajeToBroker) (*Respuesta, error) {
+func (UnimplementedConnToBrokerFromLeiaServer) GetNumberRebelds(context.Context, *MensajeToBrokerFromLeia) (*RespuestaLeia, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNumberRebelds not implemented")
 }
 func (UnimplementedConnToBrokerFromLeiaServer) mustEmbedUnimplementedConnToBrokerFromLeiaServer() {}
@@ -67,7 +67,7 @@ func RegisterConnToBrokerFromLeiaServer(s grpc.ServiceRegistrar, srv ConnToBroke
 }
 
 func _ConnToBrokerFromLeia_GetNumberRebelds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MensajeToBroker)
+	in := new(MensajeToBrokerFromLeia)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func _ConnToBrokerFromLeia_GetNumberRebelds_Handler(srv interface{}, ctx context
 		FullMethod: "/grpc.ConnToBrokerFromLeia/GetNumberRebelds",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnToBrokerFromLeiaServer).GetNumberRebelds(ctx, req.(*MensajeToBroker))
+		return srv.(ConnToBrokerFromLeiaServer).GetNumberRebelds(ctx, req.(*MensajeToBrokerFromLeia))
 	}
 	return interceptor(ctx, in, info, handler)
 }

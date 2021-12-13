@@ -35,7 +35,7 @@ type serverLeia struct {
 	pbLeia.UnimplementedConnToBrokerFromLeiaServer
 }
 
-func (s *serverLeia) GetNumberRebelds (ctx context.Context, in *pbLeia.MensajeToBroker) (*pbLeia.Respuesta, error) {
+func (s *serverLeia) GetNumberRebelds (ctx context.Context, in *pbLeia.MensajeToBrokerFromLeia) (*pbLeia.RespuestaLeia, error) {
 
 	var addressFulcrum string
 	if (in.IpServidorFulcrum == "vacia") {
@@ -48,7 +48,7 @@ func (s *serverLeia) GetNumberRebelds (ctx context.Context, in *pbLeia.MensajeTo
 		c := pbFulcrum.NewConnToServidorFromBrokerClient(conn)
 		r, err := c.LeiaGetNumberRebelds(context.Background(), &pbFulcrum.MensajeLeia{Comando: in.Comando, NombrePlaneta: in.NombrePlaneta, NombreCiudad: in.NombreCiudad})
 	
-		return &pbLeia.Respuesta{NumeroRebeldes: r.NumeroRebeldes, Vector: r.Vector, IpServidorFulcrum: r.IpServidorFulcrum}, nil
+		return &pbLeia.RespuestaLeia{NumeroRebeldes: r.NumeroRebeldes, Vector: r.Vector, IpServidorFulcrum: r.IpServidorFulcrum}, nil
 
 	} else {
 		conn, err := grpc.Dial(in.IpServidorFulcrum, grpc.WithInsecure(), grpc.WithBlock())
@@ -59,7 +59,7 @@ func (s *serverLeia) GetNumberRebelds (ctx context.Context, in *pbLeia.MensajeTo
 		c := pbFulcrum.NewConnToServidorFromBrokerClient(conn)
 		r, err := c.LeiaGetNumberRebelds(context.Background(), &pbFulcrum.MensajeLeia{Comando: in.Comando, NombrePlaneta: in.NombrePlaneta, NombreCiudad: in.NombreCiudad})
 
-		return &pbLeia.Respuesta{NumeroRebeldes: r.NumeroRebeldes, Vector: r.Vector, IpServidorFulcrum: r.IpServidorFulcrum}, nil
+		return &pbLeia.RespuestaLeia{NumeroRebeldes: r.NumeroRebeldes, Vector: r.Vector, IpServidorFulcrum: r.IpServidorFulcrum}, nil
 	}
 
 }

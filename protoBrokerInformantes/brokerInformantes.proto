@@ -4,14 +4,14 @@ package grpc;
 option go_package = "https://github.com/lilkimo/INF343-Tarea-3/protoBrokerInformantes";
 
 /*Comando de mensaje*/
-message MensajeToBroker{
+message MensajeToBrokerFromInformante{
     string ipServidorFulcrum = 1;
 }
 /*Respuesta*/
-message Respuesta {
+message RespuestaInformante {
     string direccion = 1;
 }
 
 service ConnToBrokerFromInformante {
-    rpc ObtenerDireccion(MensajeToBroker) returns (Respuesta);
+    rpc ObtenerDireccion(MensajeToBrokerFromInformante) returns (RespuestaInformante);
 }

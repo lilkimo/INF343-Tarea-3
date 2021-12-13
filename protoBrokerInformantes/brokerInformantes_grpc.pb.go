@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConnToBrokerFromInformanteClient interface {
-	ObtenerDireccion(ctx context.Context, in *MensajeToBroker, opts ...grpc.CallOption) (*Respuesta, error)
+	ObtenerDireccion(ctx context.Context, in *MensajeToBrokerFromInformante, opts ...grpc.CallOption) (*RespuestaInformante, error)
 }
 
 type connToBrokerFromInformanteClient struct {
@@ -29,8 +29,8 @@ func NewConnToBrokerFromInformanteClient(cc grpc.ClientConnInterface) ConnToBrok
 	return &connToBrokerFromInformanteClient{cc}
 }
 
-func (c *connToBrokerFromInformanteClient) ObtenerDireccion(ctx context.Context, in *MensajeToBroker, opts ...grpc.CallOption) (*Respuesta, error) {
-	out := new(Respuesta)
+func (c *connToBrokerFromInformanteClient) ObtenerDireccion(ctx context.Context, in *MensajeToBrokerFromInformante, opts ...grpc.CallOption) (*RespuestaInformante, error) {
+	out := new(RespuestaInformante)
 	err := c.cc.Invoke(ctx, "/grpc.ConnToBrokerFromInformante/ObtenerDireccion", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (c *connToBrokerFromInformanteClient) ObtenerDireccion(ctx context.Context,
 // All implementations must embed UnimplementedConnToBrokerFromInformanteServer
 // for forward compatibility
 type ConnToBrokerFromInformanteServer interface {
-	ObtenerDireccion(context.Context, *MensajeToBroker) (*Respuesta, error)
+	ObtenerDireccion(context.Context, *MensajeToBrokerFromInformante) (*RespuestaInformante, error)
 	mustEmbedUnimplementedConnToBrokerFromInformanteServer()
 }
 
@@ -50,7 +50,7 @@ type ConnToBrokerFromInformanteServer interface {
 type UnimplementedConnToBrokerFromInformanteServer struct {
 }
 
-func (UnimplementedConnToBrokerFromInformanteServer) ObtenerDireccion(context.Context, *MensajeToBroker) (*Respuesta, error) {
+func (UnimplementedConnToBrokerFromInformanteServer) ObtenerDireccion(context.Context, *MensajeToBrokerFromInformante) (*RespuestaInformante, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ObtenerDireccion not implemented")
 }
 func (UnimplementedConnToBrokerFromInformanteServer) mustEmbedUnimplementedConnToBrokerFromInformanteServer() {
@@ -68,7 +68,7 @@ func RegisterConnToBrokerFromInformanteServer(s grpc.ServiceRegistrar, srv ConnT
 }
 
 func _ConnToBrokerFromInformante_ObtenerDireccion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MensajeToBroker)
+	in := new(MensajeToBrokerFromInformante)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func _ConnToBrokerFromInformante_ObtenerDireccion_Handler(srv interface{}, ctx c
 		FullMethod: "/grpc.ConnToBrokerFromInformante/ObtenerDireccion",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnToBrokerFromInformanteServer).ObtenerDireccion(ctx, req.(*MensajeToBroker))
+		return srv.(ConnToBrokerFromInformanteServer).ObtenerDireccion(ctx, req.(*MensajeToBrokerFromInformante))
 	}
 	return interceptor(ctx, in, info, handler)
 }

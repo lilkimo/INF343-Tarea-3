@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
-	"strconv"
-	"time"
+	//"math/rand"
+	//"strconv"
+	//"time"
 
 	"context"
 	"log"
@@ -38,7 +38,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	c := pb.NewConnToBrokerClient(conn)
+	c := pb.NewConnToBrokerFromLeiaClient(conn)
 
 	ctx := context.Background()
 	if err != nil {

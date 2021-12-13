@@ -14,86 +14,87 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ConnToServidorClient is the client API for ConnToServidor service.
+// ConnToServidorFromBrokerClient is the client API for ConnToServidorFromBroker service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ConnToServidorClient interface {
+type ConnToServidorFromBrokerClient interface {
 	LeiaGetNumberRebelds(ctx context.Context, in *MensajeLeia, opts ...grpc.CallOption) (*RespuestaLeia, error)
 }
 
-type connToServidorClient struct {
+type connToServidorFromBrokerClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewConnToServidorClient(cc grpc.ClientConnInterface) ConnToServidorClient {
-	return &connToServidorClient{cc}
+func NewConnToServidorFromBrokerClient(cc grpc.ClientConnInterface) ConnToServidorFromBrokerClient {
+	return &connToServidorFromBrokerClient{cc}
 }
 
-func (c *connToServidorClient) LeiaGetNumberRebelds(ctx context.Context, in *MensajeLeia, opts ...grpc.CallOption) (*RespuestaLeia, error) {
+func (c *connToServidorFromBrokerClient) LeiaGetNumberRebelds(ctx context.Context, in *MensajeLeia, opts ...grpc.CallOption) (*RespuestaLeia, error) {
 	out := new(RespuestaLeia)
-	err := c.cc.Invoke(ctx, "/grpc.ConnToServidor/LeiaGetNumberRebelds", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/grpc.ConnToServidorFromBroker/LeiaGetNumberRebelds", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ConnToServidorServer is the server API for ConnToServidor service.
-// All implementations must embed UnimplementedConnToServidorServer
+// ConnToServidorFromBrokerServer is the server API for ConnToServidorFromBroker service.
+// All implementations must embed UnimplementedConnToServidorFromBrokerServer
 // for forward compatibility
-type ConnToServidorServer interface {
+type ConnToServidorFromBrokerServer interface {
 	LeiaGetNumberRebelds(context.Context, *MensajeLeia) (*RespuestaLeia, error)
-	mustEmbedUnimplementedConnToServidorServer()
+	mustEmbedUnimplementedConnToServidorFromBrokerServer()
 }
 
-// UnimplementedConnToServidorServer must be embedded to have forward compatible implementations.
-type UnimplementedConnToServidorServer struct {
+// UnimplementedConnToServidorFromBrokerServer must be embedded to have forward compatible implementations.
+type UnimplementedConnToServidorFromBrokerServer struct {
 }
 
-func (UnimplementedConnToServidorServer) LeiaGetNumberRebelds(context.Context, *MensajeLeia) (*RespuestaLeia, error) {
+func (UnimplementedConnToServidorFromBrokerServer) LeiaGetNumberRebelds(context.Context, *MensajeLeia) (*RespuestaLeia, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LeiaGetNumberRebelds not implemented")
 }
-func (UnimplementedConnToServidorServer) mustEmbedUnimplementedConnToServidorServer() {}
+func (UnimplementedConnToServidorFromBrokerServer) mustEmbedUnimplementedConnToServidorFromBrokerServer() {
+}
 
-// UnsafeConnToServidorServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ConnToServidorServer will
+// UnsafeConnToServidorFromBrokerServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ConnToServidorFromBrokerServer will
 // result in compilation errors.
-type UnsafeConnToServidorServer interface {
-	mustEmbedUnimplementedConnToServidorServer()
+type UnsafeConnToServidorFromBrokerServer interface {
+	mustEmbedUnimplementedConnToServidorFromBrokerServer()
 }
 
-func RegisterConnToServidorServer(s grpc.ServiceRegistrar, srv ConnToServidorServer) {
-	s.RegisterService(&ConnToServidor_ServiceDesc, srv)
+func RegisterConnToServidorFromBrokerServer(s grpc.ServiceRegistrar, srv ConnToServidorFromBrokerServer) {
+	s.RegisterService(&ConnToServidorFromBroker_ServiceDesc, srv)
 }
 
-func _ConnToServidor_LeiaGetNumberRebelds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ConnToServidorFromBroker_LeiaGetNumberRebelds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MensajeLeia)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConnToServidorServer).LeiaGetNumberRebelds(ctx, in)
+		return srv.(ConnToServidorFromBrokerServer).LeiaGetNumberRebelds(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.ConnToServidor/LeiaGetNumberRebelds",
+		FullMethod: "/grpc.ConnToServidorFromBroker/LeiaGetNumberRebelds",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnToServidorServer).LeiaGetNumberRebelds(ctx, req.(*MensajeLeia))
+		return srv.(ConnToServidorFromBrokerServer).LeiaGetNumberRebelds(ctx, req.(*MensajeLeia))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ConnToServidor_ServiceDesc is the grpc.ServiceDesc for ConnToServidor service.
+// ConnToServidorFromBroker_ServiceDesc is the grpc.ServiceDesc for ConnToServidorFromBroker service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ConnToServidor_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "grpc.ConnToServidor",
-	HandlerType: (*ConnToServidorServer)(nil),
+var ConnToServidorFromBroker_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "grpc.ConnToServidorFromBroker",
+	HandlerType: (*ConnToServidorFromBrokerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "LeiaGetNumberRebelds",
-			Handler:    _ConnToServidor_LeiaGetNumberRebelds_Handler,
+			Handler:    _ConnToServidorFromBroker_LeiaGetNumberRebelds_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

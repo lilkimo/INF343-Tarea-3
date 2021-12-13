@@ -14,86 +14,87 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ConnToBrokerClient is the client API for ConnToBroker service.
+// ConnToBrokerFromInformanteClient is the client API for ConnToBrokerFromInformante service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ConnToBrokerClient interface {
+type ConnToBrokerFromInformanteClient interface {
 	ObtenerDireccion(ctx context.Context, in *MensajeToBroker, opts ...grpc.CallOption) (*Respuesta, error)
 }
 
-type connToBrokerClient struct {
+type connToBrokerFromInformanteClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewConnToBrokerClient(cc grpc.ClientConnInterface) ConnToBrokerClient {
-	return &connToBrokerClient{cc}
+func NewConnToBrokerFromInformanteClient(cc grpc.ClientConnInterface) ConnToBrokerFromInformanteClient {
+	return &connToBrokerFromInformanteClient{cc}
 }
 
-func (c *connToBrokerClient) ObtenerDireccion(ctx context.Context, in *MensajeToBroker, opts ...grpc.CallOption) (*Respuesta, error) {
+func (c *connToBrokerFromInformanteClient) ObtenerDireccion(ctx context.Context, in *MensajeToBroker, opts ...grpc.CallOption) (*Respuesta, error) {
 	out := new(Respuesta)
-	err := c.cc.Invoke(ctx, "/grpc.ConnToBroker/ObtenerDireccion", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/grpc.ConnToBrokerFromInformante/ObtenerDireccion", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ConnToBrokerServer is the server API for ConnToBroker service.
-// All implementations must embed UnimplementedConnToBrokerServer
+// ConnToBrokerFromInformanteServer is the server API for ConnToBrokerFromInformante service.
+// All implementations must embed UnimplementedConnToBrokerFromInformanteServer
 // for forward compatibility
-type ConnToBrokerServer interface {
+type ConnToBrokerFromInformanteServer interface {
 	ObtenerDireccion(context.Context, *MensajeToBroker) (*Respuesta, error)
-	mustEmbedUnimplementedConnToBrokerServer()
+	mustEmbedUnimplementedConnToBrokerFromInformanteServer()
 }
 
-// UnimplementedConnToBrokerServer must be embedded to have forward compatible implementations.
-type UnimplementedConnToBrokerServer struct {
+// UnimplementedConnToBrokerFromInformanteServer must be embedded to have forward compatible implementations.
+type UnimplementedConnToBrokerFromInformanteServer struct {
 }
 
-func (UnimplementedConnToBrokerServer) ObtenerDireccion(context.Context, *MensajeToBroker) (*Respuesta, error) {
+func (UnimplementedConnToBrokerFromInformanteServer) ObtenerDireccion(context.Context, *MensajeToBroker) (*Respuesta, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ObtenerDireccion not implemented")
 }
-func (UnimplementedConnToBrokerServer) mustEmbedUnimplementedConnToBrokerServer() {}
+func (UnimplementedConnToBrokerFromInformanteServer) mustEmbedUnimplementedConnToBrokerFromInformanteServer() {
+}
 
-// UnsafeConnToBrokerServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ConnToBrokerServer will
+// UnsafeConnToBrokerFromInformanteServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ConnToBrokerFromInformanteServer will
 // result in compilation errors.
-type UnsafeConnToBrokerServer interface {
-	mustEmbedUnimplementedConnToBrokerServer()
+type UnsafeConnToBrokerFromInformanteServer interface {
+	mustEmbedUnimplementedConnToBrokerFromInformanteServer()
 }
 
-func RegisterConnToBrokerServer(s grpc.ServiceRegistrar, srv ConnToBrokerServer) {
-	s.RegisterService(&ConnToBroker_ServiceDesc, srv)
+func RegisterConnToBrokerFromInformanteServer(s grpc.ServiceRegistrar, srv ConnToBrokerFromInformanteServer) {
+	s.RegisterService(&ConnToBrokerFromInformante_ServiceDesc, srv)
 }
 
-func _ConnToBroker_ObtenerDireccion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ConnToBrokerFromInformante_ObtenerDireccion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MensajeToBroker)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConnToBrokerServer).ObtenerDireccion(ctx, in)
+		return srv.(ConnToBrokerFromInformanteServer).ObtenerDireccion(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.ConnToBroker/ObtenerDireccion",
+		FullMethod: "/grpc.ConnToBrokerFromInformante/ObtenerDireccion",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnToBrokerServer).ObtenerDireccion(ctx, req.(*MensajeToBroker))
+		return srv.(ConnToBrokerFromInformanteServer).ObtenerDireccion(ctx, req.(*MensajeToBroker))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ConnToBroker_ServiceDesc is the grpc.ServiceDesc for ConnToBroker service.
+// ConnToBrokerFromInformante_ServiceDesc is the grpc.ServiceDesc for ConnToBrokerFromInformante service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ConnToBroker_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "grpc.ConnToBroker",
-	HandlerType: (*ConnToBrokerServer)(nil),
+var ConnToBrokerFromInformante_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "grpc.ConnToBrokerFromInformante",
+	HandlerType: (*ConnToBrokerFromInformanteServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "ObtenerDireccion",
-			Handler:    _ConnToBroker_ObtenerDireccion_Handler,
+			Handler:    _ConnToBrokerFromInformante_ObtenerDireccion_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

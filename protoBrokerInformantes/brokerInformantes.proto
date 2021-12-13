@@ -12,6 +12,6 @@ message Respuesta {
     string direccion = 1;
 }
 
-service ConnToBroker {
+service ConnToBrokerFromInformante {
     rpc ObtenerDireccion(MensajeToBroker) returns (Respuesta);
 }

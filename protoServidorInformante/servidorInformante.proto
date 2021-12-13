@@ -17,7 +17,7 @@ message Respuesta{
 }
 
 
-service ConnToServidor {
+service ConnToServidorFromInformante {
     rpc UpdateName (MensajeToServidor) returns (Respuesta);
     rpc UpdateNumber (MensajeToServidor) returns (Respuesta);
     rpc AddCity (MensajeToServidor) returns (Respuesta);

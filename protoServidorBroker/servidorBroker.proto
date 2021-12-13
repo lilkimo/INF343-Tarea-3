@@ -15,6 +15,6 @@ message RespuestaLeia {
     string ip_servidor_fulcrum = 3;
 }
 
-service ConnToServidor {
+service ConnToServidorFromBroker {
     rpc LeiaGetNumberRebelds (MensajeLeia) returns (RespuestaLeia);
 }

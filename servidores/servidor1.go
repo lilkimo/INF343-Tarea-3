@@ -17,11 +17,11 @@ import (
 )
 
 type serverInformante struct {
-	pbInformante.UnimplementedConnToServidorServer
+	pbInformante.UnimplementedConnToServidorFromInformanteServer
 }
 
 type serverBroker struct {
-	pbBroker.UnimplementedConnToServidorServer
+	pbBroker.UnimplementedConnToServidorFromBrokerServer
 }
 
 const (
@@ -277,7 +277,7 @@ func main() {
 	s := serverBroker{}
 	grcpServer := grpc.NewServer()
 
-	pbBroker.RegisterConnToServidorServer(grcpServer, &s)
+	pbBroker.RegisterConnToServidorFromBrokerServer(grcpServer, &s)
 	log.Printf("server listening at %v", lis.Addr())
 	if err := grcpServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

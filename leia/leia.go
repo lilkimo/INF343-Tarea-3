@@ -52,7 +52,7 @@ func main() {
 	var arg2 string;
 
 	for {
-		fmt.Scanf("%s %s %s", &comando, &arg1, &arg2)
+		fmt.Scanf("%s %s %s\n", &comando, &arg1, &arg2)
 		if (comando != "GetNumberRebelds") || (arg1 == "") || (arg2 == "") {
 			fmt.Println("Entrada inválida, intente nuevamente.")
 		} else {
@@ -62,7 +62,8 @@ func main() {
 
 	// Asumo que dos ciudades, aunque estén en diferentes planetas),
 	// no pueden tener el mismo nombre.
-	if val, ok := informacion[arg2]; ok {
+	val, ok := informacion[arg2]
+	if ok {
 		// Aquí habría que aplicar Monotonic Reads, ni idea de cómo la verdad xd.
 		// Me imagino que hay que revisar el reloj o weás así no sé nada xuxetumare.
 		rS, err := c.GetNumberRebelds(ctx, &pb.MensajeToBroker{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, IpServidorFulcrum: val.servidor})
@@ -93,11 +94,11 @@ func main() {
 		val.cantRebeldes = cantRebeldes
 		val.reloj = reloj
 		val.servidor = ip
-		informacion[arg1] = data{cantRebeldes: cantRebeldes, reloj: reloj, servidor: ip}
 	}
+	informacion[arg2] = val
 }
 
 
 func ObtenerCantRebeldes(nombrePlaneta string, nombreCiudad string) (int, []int, string) {
-	return 0, make([]int, 3), "localhost"
+	return 3, make([]int, 3), "localhost"
 }

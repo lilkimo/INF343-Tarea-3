@@ -29,7 +29,8 @@ func main() {
 	cantRebeldes, reloj, ip := ObtenerCantRebeldes(arg1, arg2)
 	// Asumo que dos ciudades, aunque estén en diferentes planetas),
 	// no pueden tener el mismo nombre.
-	if val, ok := informacion[arg2]; ok {
+	val, ok := informacion[arg2]
+	if ok {
 		// Aquí habría que aplicar Monotonic Reads, ni idea de cómo la verdad xd.
 		// Me imagino que hay que revisar el reloj o weás así no sé nada xuxetumare.
 		val.cantRebeldes = cantRebeldes
@@ -37,10 +38,11 @@ func main() {
 		val.servidor = ip
 	} else {
 		// Si la weá no existe la chanta así tal cual. 
-		informacion[arg1] = data{cantRebeldes: cantRebeldes, reloj: reloj, servidor: ip}
+		val = data{cantRebeldes: cantRebeldes, reloj: reloj, servidor: ip}
 	}
+	informacion[arg2] = val
 }
 
 func ObtenerCantRebeldes(nombrePlaneta string, nombreCiudad string) (int, []int, string) {
-	return 0, make([]int, 3), "localhost"
+	return 3, make([]int, 3), "localhost"
 }

@@ -8,12 +8,12 @@ import (
 	"strconv"
 
 	"log"
-	//"net"
+	"net"
 	"os"
 	"strings"
 	pbBroker "inf343-tarea-3/protoServidorBroker"
 	pbInformante "inf343-tarea-3/protoServidorInformante"
-	//"google.golang.org/grpc"
+	"google.golang.org/grpc"
 )
 
 type serverInformante struct {
@@ -263,21 +263,23 @@ func check(err error) {
 }
 
 func main() {
-	command("AddCity", "coruscant", "temploJedi", 12)
+	/*command("AddCity", "coruscant", "temploJedi", 12)
 	command("AddCity", "coruscant", "senado", 23)
 	command("UpdateName", "coruscant", "senado:sewers", 0)
-	command("DeleteCity", "coruscant", "temploJedi", 0)
+	command("DeleteCity", "coruscant", "temploJedi", 0)*/
 
 	
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
-		log.Fatalf("fatal Error: %v", err)
+		log.Fatalf("failed to listen: %v", err)
 	}
-	s := grpc.NewServer()
-	pb.RegisterNameDataServiceServer(s, &DataNodeServer{})
+
+	s := serverBroker{}
+	grcpServer := grpc.NewServer()
+
+	pbBroker.RegisterConnToServidorServer(grcpServer, &s)
 	log.Printf("server listening at %v", lis.Addr())
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("fatal Error: %v", err)
+	if err := grcpServer.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
 	}
-	
 }

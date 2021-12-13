@@ -13,13 +13,14 @@ import (
 
 	pbInformante "inf343-tarea-3/protoBrokerInformantes"
 	pbLeia "inf343-tarea-3/protoBrokerLeia"
+	pbFulcrum "inf343-tarea-3/protoServidorBroker"
 	//pbFulcrum "inf343-tarea-3/protoServidorBroker"
 
 	"google.golang.org/grpc"
 	//"google.golang.org/grpc/peer"
 )
 
-var adress = [...]string{"localhost:50061", "localhost:50062", "localhost:50063"}
+var address = [...]string{"localhost:50061", "localhost:50062", "localhost:50063"}
 //CAMBIAR A LAS DIRECCIONES DE LOS DISTINTOS SERVIDORES FULCRUM ej: dist14:puerto
 
 const (
@@ -32,6 +33,35 @@ type serverInformante struct {
 }
 type serverLeia struct {
 	pbLeia.UnimplementedConnToBrokerServer
+}
+
+func (s *serverLeia) GetNumberRebelds (ctx context.Context, in *pbLeia.MensajeToBroker) (*pbLeia.Respuesta, error) {
+
+	var addressFulcrum string
+	if (in.IpServidorFulcrum == "vacia") {
+		addressFulcrum = address[rand.Intn(3)]
+		conn, err := grpc.Dial(addressFulcrum, grpc.WithInsecure(), grpc.WithBlock())
+		if err != nil {
+			log.Fatalf("No se pudo conectar: %v", err)
+		}
+		defer conn.Close()
+		c := pbFulcrum.NewConnToServidorClient(conn)
+		r, err := c.LeiaGetNumberRebelds(context.Background(), &pbFulcrum.MensajeLeia{Comando: in.Comando, NombrePlaneta: in.NombrePlaneta, NombreCiudad: in.NombreCiudad})
+	
+		return &pbLeia.Respuesta{NumeroRebeldes: r.NumeroRebeldes, Vector: r.Vector, IpServidorFulcrum: r.IpServidorFulcrum}, nil
+
+	} else {
+		conn, err := grpc.Dial(in.IpServidorFulcrum, grpc.WithInsecure(), grpc.WithBlock())
+		if err != nil {
+			log.Fatalf("No se pudo conectar: %v", err)
+		}
+		defer conn.Close()
+		c := pbFulcrum.NewConnToServidorClient(conn)
+		r, err := c.LeiaGetNumberRebelds(context.Background(), &pbFulcrum.MensajeLeia{Comando: in.Comando, NombrePlaneta: in.NombrePlaneta, NombreCiudad: in.NombreCiudad})
+
+		return &pbLeia.Respuesta{NumeroRebeldes: r.NumeroRebeldes, Vector: r.Vector, IpServidorFulcrum: r.IpServidorFulcrum}, nil
+	}
+
 }
 
 func conexionLeia() {

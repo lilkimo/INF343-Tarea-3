@@ -2,18 +2,27 @@ package main
 
 import (
 	"bufio"
-	//"context"
+	"context"
 	"fmt"
 	"io/ioutil"
+	"strconv"
 
 	"log"
 	//"net"
 	"os"
 	"strings"
-	//pbSvBk "INF343-Tarea-3\protoServidorBroker"
-	//pbSvInf "INF343-Tarea-3\protoServidorInformante"
+	pbBroker "inf343-tarea-3/protoServidorBroker"
+	pbInformante "inf343-tarea-3/protoServidorInformante"
 	//"google.golang.org/grpc"
 )
+
+type serverInformante struct {
+	pbInformante.UnimplementedConnToServidorServer
+}
+
+type serverBroker struct {
+	pbBroker.UnimplementedConnToServidorServer
+}
 
 const (
 	port = ":50061"
@@ -24,19 +33,27 @@ var log_planetas []string
 
 var comandos []string = []string{"AddCity", "UpdateNumber", "UpdateName", "DeleteCity"}
 
-/*
-type DataNodeServer struct {
-	pb.UnimplementedNameDataServiceServer
+type vectorPlaneta struct {
+	vector [] int32
+	planeta string
 }
 
-func (s *DataNodeServer) RegistrarJugadas(ctx context.Context, in *pb.JugadaToData) (*pb.RespuestaJugada, error) {
-	log.Printf("Input - pl: %d | cd: %d | va: \n", in.IdJugador, in.Etapa)
-	var jgs []int32
-	guardarJugada(in.IdJugador, in.Jugada, in.Etapa)
-	jgs = obtenerJugada(in.IdJugador, in.Etapa)
-	return &pb.RespuestaJugada{Jugadas: jgs, Cantidad: int32(len(jgs))}, nil
+var vectores [] vectorPlaneta
+
+func (s *serverBroker) LeiaGetNumberRebelds(ctx context.Context, in *pbBroker.MensajeLeia) (*pbBroker.RespuestaLeia, error) {
+	v := []int32{0,0,0}
+	regciudad := get_city_data(in.NombrePlaneta, in.NombreCiudad)
+	str := strings.SplitAfter(regciudad, " ")
+	n , _ := strconv.Atoi(str[2])
+	for _,vector := range vectores {
+		if vector.planeta == in.NombrePlaneta {
+			v = vector.vector
+			break
+		}
+	}
+	return &pbBroker.RespuestaLeia{NumeroRebeldes: int32(n), Vector: v, IpServidorFulcrum: "localhost"+port}, nil
 }
-*/
+
 
 func valueInSlice(value string, list []string) bool {
 	for _, b := range list {
@@ -44,6 +61,8 @@ func valueInSlice(value string, list []string) bool {
 			return true
 		}
 	}
+	arr := []int32{0,0,0}
+	vectores = append(vectores, vectorPlaneta{vector: arr, planeta: value})
 	return false
 }
 
@@ -52,44 +71,64 @@ func command(comando string, planeta string, ciudad string, valor int32) {
 	planetLog := fmt.Sprintf("servidores/%s.log", planeta)
 	var succ bool = false
 
-	if valueInSlice(comando, comandos) {
-		if comando == "AddCity" {
-			if !valueInSlice(planeta, reg_planetas) {
-				f, err := os.Create(planetFile)
-				check(err)
-				reg_planetas = append(reg_planetas, planeta)
-				f.Close()
+	if comando == "AddCity" {
+		if !valueInSlice(planeta, reg_planetas) {
+			
+			f, err := os.Create(planetFile)
+			check(err)
+			reg_planetas = append(reg_planetas, planeta)
+			
+			f.Close()
+			
+		}	
+		if city_exists(planeta, ciudad) {
+			log.Printf("ciudad ya existe, no se puede agregar")
+			return
+		}
+		if valor < 0 {
+			valor = 0
+		}
+		for _, vector := range vectores{
+			if vector.planeta == planeta {
+				vector.vector[0] += 1
+				break
 			}
-			if city_exists(planeta, ciudad) {
-				log.Printf("ciudad ya existe, no se puede agregar")
-				return
-			}
-			if valor < 0 {
-				valor = 0
-			}
-			AddCity(planeta, ciudad, valor)
+		}
+		AddCity(planeta, ciudad, valor)
+		succ = true
+
+	} else if comando == "UpdateName" {
+		aux := strings.Split(ciudad, ":")
+		if city_exists(planeta, aux[0]) {
+			UpdateName(planeta, aux[0], aux[1])
 			succ = true
-
-		} else if comando == "UpdateName" {
-			aux := strings.Split(ciudad, ":")
-			if city_exists(planeta, aux[0]) {
-				UpdateName(planeta, aux[0], aux[1])
-				succ = true
-			}
-
-		} else {
-			if city_exists(planeta, ciudad) {
-				if comando == "UpdateNumber" {
-					UpdateNumber(planeta, ciudad, valor)
-					succ = true
-				} else if comando == "DeleteCity" {
-					DeleteCity(planeta, ciudad)
-					succ = true
+			for _, vector := range vectores{
+				if vector.planeta == planeta {
+					vector.vector[0] += 1
 				}
 			}
 		}
+
 	} else {
-		log.Printf("comando invalido")
+		if city_exists(planeta, ciudad) {
+			if comando == "UpdateNumber" {
+				UpdateNumber(planeta, ciudad, valor)
+				succ = true
+				for _, vector := range vectores{
+					if vector.planeta == planeta {
+						vector.vector[0] += 1
+					}
+				}
+			} else if comando == "DeleteCity" {
+				DeleteCity(planeta, ciudad)
+				succ = true
+				for _, vector := range vectores{
+					if vector.planeta == planeta {
+						vector.vector[0] += 1
+					}
+				}
+			}
+		}
 	}
 	if succ == true {
 		if !valueInSlice(planeta, log_planetas) {
@@ -226,10 +265,10 @@ func check(err error) {
 func main() {
 	command("AddCity", "coruscant", "temploJedi", 12)
 	command("AddCity", "coruscant", "senado", 23)
-	//command("UpdateName", "coruscant", "senado:sewers", 0)
-	//command("DeleteCity", "coruscant", "temploJedi", 0)
+	command("UpdateName", "coruscant", "senado:sewers", 0)
+	command("DeleteCity", "coruscant", "temploJedi", 0)
 
-	/*
+	
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("fatal Error: %v", err)
@@ -239,6 +278,6 @@ func main() {
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("fatal Error: %v", err)
-	}*/
+	}
 	
 }

@@ -2,15 +2,48 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"strconv"
+	"time"
+
+	"context"
+	"log"
+
+	pb "inf343-tarea-3/protoBrokerLeia"
+	"google.golang.org/grpc"
+)
+
+
+
+const (
+	address = "localhost:50051"
 )
 
 type data struct {
-	cantRebeldes int
-	reloj []int
+	cantRebeldes int32
+	reloj [] int32
 	servidor string
 }
 
 func main() {
+
+	direccionToId := make(map[string]int)
+	direccionToId["localhost:50061"] = 0
+	direccionToId["localhost:50062"] = 1
+	direccionToId["localhost:50063"] = 2
+	
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("No se pudo conectar: %v", err)
+	}
+	defer conn.Close()
+
+	c := pb.NewConnToBrokerClient(conn)
+
+	ctx := context.Background()
+	if err != nil {
+		log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
+	}
 	// {ciudad: (cantRebeldes, reloj, servidor)}
 	informacion := make(map[string]data)
 	
@@ -26,20 +59,44 @@ func main() {
 			break
 		}
 	}
-	cantRebeldes, reloj, ip := ObtenerCantRebeldes(arg1, arg2)
+
 	// Asumo que dos ciudades, aunque estén en diferentes planetas),
 	// no pueden tener el mismo nombre.
 	if val, ok := informacion[arg2]; ok {
 		// Aquí habría que aplicar Monotonic Reads, ni idea de cómo la verdad xd.
 		// Me imagino que hay que revisar el reloj o weás así no sé nada xuxetumare.
+		rS, err := c.GetNumberRebelds(ctx, &pb.MensajeToBroker{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, IpServidorFulcrum: val.servidor})
+		if err != nil {
+			log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
+		}
+		cantRebeldes := rS.GetNumeroRebeldes()
+		reloj := rS.GetVector()
+		ip := rS.GetIpServidorFulcrum()
+
+		if (val.reloj[direccionToId[ip]] <= reloj[direccionToId[ip]]){
+			val.cantRebeldes = cantRebeldes
+			val.reloj = reloj
+			val.servidor = ip
+		} else {
+			fmt.Println("Inconsistencia encontrada")
+		}
+	} else {
+		// Si la weá no existe la chanta así tal cual. 
+		rS, err := c.GetNumberRebelds(ctx, &pb.MensajeToBroker{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, IpServidorFulcrum: "vacia"})
+		if err != nil {
+			log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
+		}
+		cantRebeldes := rS.GetNumeroRebeldes()
+		reloj := rS.GetVector()
+		ip := rS.GetIpServidorFulcrum()
+
 		val.cantRebeldes = cantRebeldes
 		val.reloj = reloj
 		val.servidor = ip
-	} else {
-		// Si la weá no existe la chanta así tal cual. 
 		informacion[arg1] = data{cantRebeldes: cantRebeldes, reloj: reloj, servidor: ip}
 	}
 }
+
 
 func ObtenerCantRebeldes(nombrePlaneta string, nombreCiudad string) (int, []int, string) {
 	return 0, make([]int, 3), "localhost"

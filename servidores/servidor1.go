@@ -26,7 +26,7 @@ type serverBroker struct {
 
 const (
 	port = ":50061"
-	port2 = ":50062"
+	portInformante = ":50062"
 )
 
 var reg_planetas []string
@@ -64,7 +64,7 @@ func (s *serverInformante) Comando (ctx context.Context, in *pbInformante.Mensaj
 		}
 	}
 
-	return &pbInformante.Respuesta{Vector: vct, IpServidorFulcrum: "localhost"+port2}, nil
+	return &pbInformante.Respuesta{Vector: vct, IpServidorFulcrum: "localhost"+portInformante}, nil
 }
 
 func valueInSlice(value string, list []string) bool {
@@ -275,7 +275,7 @@ func check(err error) {
 
 func conexionInformante() {
 
-	lis, err := net.Listen("tcp", port2)
+	lis, err := net.Listen("tcp", portInformante)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

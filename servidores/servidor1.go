@@ -46,15 +46,13 @@ func (s *serverBroker) LeiaGetNumberRebelds(ctx context.Context, in *pbBroker.Me
 	regciudad := get_city_data(in.NombrePlaneta, in.NombreCiudad)
 	str := strings.Split(regciudad, " ")[2]
 	fmt.Println(str)
-	n, _ := strconv.Atoi(str)
-	fmt.Printf("owo: %d: ",n)
 	for _,vector := range vectores {
 		if vector.planeta == in.NombrePlaneta {
 			v = vector.vector
 			break
 		}
 	}
-	return &pbBroker.ServidorRespuestaLeia{NumeroRebeldes: int32(n), Vector: v, IpServidorFulcrum: "dist13"+port}, nil
+	return &pbBroker.ServidorRespuestaLeia{NumeroRebeldes: str, Vector: v, IpServidorFulcrum: "dist13"+port}, nil
 }
 
 func (s *serverInformante) Comando (ctx context.Context, in *pbInformante.MensajeToServidor) (*pbInformante.Respuesta, error) {

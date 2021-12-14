@@ -1,10 +1,10 @@
-sv1: 
+Servidor1: 
 	go run servidores/servidor1.go
 
-sv2:
+Servidor2:
 	go run servidores/servidor2.go
 
-sv3:
+Servidor3:
 	go run servidores/servidor3.go
 
 Almirante: 

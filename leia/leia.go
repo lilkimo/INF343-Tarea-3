@@ -16,7 +16,7 @@ import (
 
 
 const (
-	address = "localhost:50052"
+	address = "dist16:50052"
 )
 
 type data struct {
@@ -24,12 +24,11 @@ type data struct {
 	reloj [] int32
 	servidor string
 }
-
 func main() {
 	direccionToId := make(map[string]int)
-	direccionToId["localhost:50061"] = 0
-	direccionToId["localhost:50062"] = 1
-	direccionToId["localhost:50063"] = 2
+	direccionToId["dist13:50061"] = 0
+	direccionToId["dist14:50063"] = 1
+	direccionToId["dist15:50065"] = 2
 	
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
@@ -53,7 +52,8 @@ func main() {
 	fmt.Println("Presione ENTER sin ingresar un comando pasa salir")
 	for {
 		for {
-			fmt.Scanf("Ingrese comando: %s %s %s\n", &comando, &arg1, &arg2)
+			fmt.Print("Ingrese comando: ")
+			fmt.Scanf("%s %s %s\n", &comando, &arg1, &arg2)
 			if (comando == "") && (arg1 == "") && (arg2 == "") {
 				return
 			} else if (comando != "GetNumberRebelds") || (arg1 == "") || (arg2 == "") {
@@ -79,6 +79,7 @@ func main() {
 
 			if (val.reloj[direccionToId[ip]] <= reloj[direccionToId[ip]]){
 				val.cantRebeldes = cantRebeldes
+				fmt.Printf("Cantidad de rebeldes %d\n", cantRebeldes)
 				val.reloj = reloj
 				val.servidor = ip
 			} else {
@@ -90,11 +91,13 @@ func main() {
 			if err != nil {
 				log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
 			}
+
 			cantRebeldes := rS.GetNumeroRebeldes()
 			reloj := rS.GetVector()
 			ip := rS.GetIpServidorFulcrum()
 
 			val.cantRebeldes = cantRebeldes
+			fmt.Printf("Cantidad de rebeldes %d\n", cantRebeldes)
 			val.reloj = reloj
 			val.servidor = ip
 		}

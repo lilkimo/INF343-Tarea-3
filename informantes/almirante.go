@@ -15,9 +15,9 @@ import (
 )
 
 const (
-	addressBroker = "localhost:50051"
+	addressBroker = "dist16:50051"
 )
-var addressFulcrum = [...]string{"localhost:50062"}
+var addressFulcrum = [...]string{"dist13:50062", "dist14:50064", "dist15:50066"}
 type data struct {
 	comandos []string
 	reloj []int32
@@ -61,11 +61,13 @@ func main() {
 	var arg2 string
 	var arg3 string
 
-	fmt.Println("Presione ENTER sin ingresar un comando pasa salir")
+	fmt.Println("Presione ENTER sin ingresar un comando para salir")
 	for {
 		for {
-			fmt.Scanf("Ingrese comando: %s %s %s %s\n", &comando, &arg1, &arg2, &arg3)
+			fmt.Print("Ingrese comando: ")
+			fmt.Scanf("%s %s %s %s\n", &comando, &arg1, &arg2, &arg3)
 			if (comando == "") && (arg1 == "") && (arg2 == "") && (arg3 == "") {
+				fmt.Println("owo")
 				return
 			} else if (arg1 == "") || (arg2 == "") {
 				fmt.Println("Entrada inválida, intente nuevamente. (1)")
@@ -97,12 +99,12 @@ func main() {
 				case addressFulcrum[0]:
 					cFulcrum = conexiones[0]
 					break
-				/*case addressFulcrum[1]:
+				case addressFulcrum[1]:
 					cFulcrum = conexiones[1]
 					break
 				case addressFulcrum[2]:
 					cFulcrum = conexiones[2]
-					break*/
+					break
 			}
 			r, err := cFulcrum.Comando(ctx, &pbFulcrum.MensajeToServidor{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, NuevoValor: arg3})
 			if err != nil {
@@ -118,11 +120,7 @@ func main() {
 			}
 			val.servidor = ip
 			val.comandos = append(val.comandos, strcmd)
-			// Si ya existía el registro actualizo reloj y ip (¿Quizás hacer esa weá de
-			// agarrar el máximo valor de los componentes del viejo reloj y el nuevo?)
-			// y appendeo a los comandos el nuevo comando ejecutado.
 		} else {
-			// Si la weá no existe la chanta así tal cual.
 			fmt.Println("a")
 			rS, err := c.ObtenerDireccion(ctx, &pbBroker.MensajeToBrokerFromInformante{IpServidorFulcrum: "vacia"})
 			ip := rS.Direccion
@@ -134,12 +132,12 @@ func main() {
 			case addressFulcrum[0]:
 				cFulcrum = conexiones[0]
 				break
-			/*case addressFulcrum[1]:
+			case addressFulcrum[1]:
 				cFulcrum = conexiones[1]
 				break
 			case addressFulcrum[2]:
 				cFulcrum = conexiones[2]
-				break*/
+				break
 			}
 			r, err := cFulcrum.Comando(ctx, &pbFulcrum.MensajeToServidor{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, NuevoValor: arg3})
 			if err != nil {

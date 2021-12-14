@@ -53,7 +53,7 @@ func (s *serverBroker) LeiaGetNumberRebelds(ctx context.Context, in *pbBroker.Me
 			break
 		}
 	}
-	return &pbBroker.ServidorRespuestaLeia{NumeroRebeldes: int32(n), Vector: v, IpServidorFulcrum: "localhost"+port}, nil
+	return &pbBroker.ServidorRespuestaLeia{NumeroRebeldes: int32(n), Vector: v, IpServidorFulcrum: "dist13"+port}, nil
 }
 
 func (s *serverInformante) Comando (ctx context.Context, in *pbInformante.MensajeToServidor) (*pbInformante.Respuesta, error) {

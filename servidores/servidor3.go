@@ -45,9 +45,9 @@ var vectores []vectorPlaneta
 func (s *serverBroker) LeiaGetNumberRebelds(ctx context.Context, in *pbBroker.MensajeLeia) (*pbBroker.ServidorRespuestaLeia, error) {
 	v := []int32{0, 0, 0}
 	regciudad := get_city_data(in.NombrePlaneta, in.NombreCiudad)
-	str := strings.Split(regciudad, " ")
-	fmt.Println(str[2])
-	n, _ := strconv.Atoi(str[2])
+	str := strings.Split(regciudad, " ")[2]
+	fmt.Println(str)
+	n, _ := strconv.Atoi(str)
 	for _, vector := range vectores {
 		if vector.planeta == in.NombrePlaneta {
 			v = vector.vector

@@ -26,6 +26,7 @@ type serverBroker struct {
 
 const (
 	port = ":50061"
+	port2 = ":50062"
 )
 
 var reg_planetas []string
@@ -54,6 +55,17 @@ func (s *serverBroker) LeiaGetNumberRebelds(ctx context.Context, in *pbBroker.Me
 	return &pbBroker.ServidorRespuestaLeia{NumeroRebeldes: int32(n), Vector: v, IpServidorFulcrum: "localhost"+port}, nil
 }
 
+func (s *serverInformante) Comando (ctx context.Context, in *pbInformante.MensajeToServidor) (*pbInformante.Respuesta, error) {
+	vct := []int32{0}
+	command(in.Comando, in.NombrePlaneta, in.NombreCiudad, in.NuevoValor)
+	for _, vector := range vectores {
+		if vector.planeta == in.NombrePlaneta {
+			vct = vector.vector
+		}
+	}
+
+	return &pbInformante.Respuesta{Vector: vct, IpServidorFulcrum: "localhost"+port2}, nil
+}
 
 func valueInSlice(value string, list []string) bool {
 	for _, b := range list {
@@ -66,7 +78,7 @@ func valueInSlice(value string, list []string) bool {
 	return false
 }
 
-func command(comando string, planeta string, ciudad string, valor int32) {
+func command(comando string, planeta string, ciudad string, valor string) {
 	planetFile := fmt.Sprintf("servidores/%s.txt", planeta)
 	planetLog := fmt.Sprintf("servidores/%s.log", planeta)
 	var succ bool = false
@@ -85,22 +97,19 @@ func command(comando string, planeta string, ciudad string, valor int32) {
 			log.Printf("ciudad ya existe, no se puede agregar")
 			return
 		}
-		if valor < 0 {
-			valor = 0
-		}
 		for _, vector := range vectores{
 			if vector.planeta == planeta {
 				vector.vector[0] += 1
 				break
 			}
 		}
-		AddCity(planeta, ciudad, valor)
+		valor,_ := strconv.Atoi(valor)
+		AddCity(planeta, ciudad, int32(valor))
 		succ = true
 
 	} else if comando == "UpdateName" {
-		aux := strings.Split(ciudad, ":")
-		if city_exists(planeta, aux[0]) {
-			UpdateName(planeta, aux[0], aux[1])
+		if city_exists(planeta, ciudad) {
+			UpdateName(planeta, ciudad, valor)
 			succ = true
 			for _, vector := range vectores{
 				if vector.planeta == planeta {
@@ -112,7 +121,8 @@ func command(comando string, planeta string, ciudad string, valor int32) {
 	} else {
 		if city_exists(planeta, ciudad) {
 			if comando == "UpdateNumber" {
-				UpdateNumber(planeta, ciudad, valor)
+				valor, _ := strconv.Atoi(valor)
+				UpdateNumber(planeta, ciudad, int32(valor))
 				succ = true
 				for _, vector := range vectores{
 					if vector.planeta == planeta {
@@ -137,7 +147,8 @@ func command(comando string, planeta string, ciudad string, valor int32) {
 			log_planetas = append(log_planetas, planeta)
 			f.Close()
 		}
-		logPlanetario(comando, planeta, ciudad, valor)
+		valor,_ := strconv.Atoi(valor)
+		logPlanetario(comando, planeta, ciudad, int32(valor))
 	}
 }
 
@@ -262,13 +273,30 @@ func check(err error) {
 	}
 }
 
+func conexionInformante() {
+
+	lis, err := net.Listen("tcp", port2)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	s := serverInformante{}
+	grcpServer := grpc.NewServer()
+
+	pbInformante.RegisterConnToServidorFromInformanteServer(grcpServer, &s)
+	log.Printf("server listening at %v", lis.Addr())
+	if err := grcpServer.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
+
 func main() {
 	/*command("AddCity", "coruscant", "temploJedi", 12)
 	command("AddCity", "coruscant", "senado", 23)
 	command("UpdateName", "coruscant", "senado:sewers", 0)
 	command("DeleteCity", "coruscant", "temploJedi", 0)*/
 
-	
+	go conexionInformante()
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

@@ -18,10 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConnToServidorFromInformanteClient interface {
-	UpdateName(ctx context.Context, in *MensajeToServidor, opts ...grpc.CallOption) (*Respuesta, error)
-	UpdateNumber(ctx context.Context, in *MensajeToServidor, opts ...grpc.CallOption) (*Respuesta, error)
-	AddCity(ctx context.Context, in *MensajeToServidor, opts ...grpc.CallOption) (*Respuesta, error)
-	DeleteCity(ctx context.Context, in *MensajeToServidor, opts ...grpc.CallOption) (*Respuesta, error)
+	Comando(ctx context.Context, in *MensajeToServidor, opts ...grpc.CallOption) (*Respuesta, error)
 }
 
 type connToServidorFromInformanteClient struct {
@@ -32,36 +29,9 @@ func NewConnToServidorFromInformanteClient(cc grpc.ClientConnInterface) ConnToSe
 	return &connToServidorFromInformanteClient{cc}
 }
 
-func (c *connToServidorFromInformanteClient) UpdateName(ctx context.Context, in *MensajeToServidor, opts ...grpc.CallOption) (*Respuesta, error) {
+func (c *connToServidorFromInformanteClient) Comando(ctx context.Context, in *MensajeToServidor, opts ...grpc.CallOption) (*Respuesta, error) {
 	out := new(Respuesta)
-	err := c.cc.Invoke(ctx, "/grpc.ConnToServidorFromInformante/UpdateName", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *connToServidorFromInformanteClient) UpdateNumber(ctx context.Context, in *MensajeToServidor, opts ...grpc.CallOption) (*Respuesta, error) {
-	out := new(Respuesta)
-	err := c.cc.Invoke(ctx, "/grpc.ConnToServidorFromInformante/UpdateNumber", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *connToServidorFromInformanteClient) AddCity(ctx context.Context, in *MensajeToServidor, opts ...grpc.CallOption) (*Respuesta, error) {
-	out := new(Respuesta)
-	err := c.cc.Invoke(ctx, "/grpc.ConnToServidorFromInformante/AddCity", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *connToServidorFromInformanteClient) DeleteCity(ctx context.Context, in *MensajeToServidor, opts ...grpc.CallOption) (*Respuesta, error) {
-	out := new(Respuesta)
-	err := c.cc.Invoke(ctx, "/grpc.ConnToServidorFromInformante/DeleteCity", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/grpc.ConnToServidorFromInformante/Comando", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -72,10 +42,7 @@ func (c *connToServidorFromInformanteClient) DeleteCity(ctx context.Context, in 
 // All implementations must embed UnimplementedConnToServidorFromInformanteServer
 // for forward compatibility
 type ConnToServidorFromInformanteServer interface {
-	UpdateName(context.Context, *MensajeToServidor) (*Respuesta, error)
-	UpdateNumber(context.Context, *MensajeToServidor) (*Respuesta, error)
-	AddCity(context.Context, *MensajeToServidor) (*Respuesta, error)
-	DeleteCity(context.Context, *MensajeToServidor) (*Respuesta, error)
+	Comando(context.Context, *MensajeToServidor) (*Respuesta, error)
 	mustEmbedUnimplementedConnToServidorFromInformanteServer()
 }
 
@@ -83,17 +50,8 @@ type ConnToServidorFromInformanteServer interface {
 type UnimplementedConnToServidorFromInformanteServer struct {
 }
 
-func (UnimplementedConnToServidorFromInformanteServer) UpdateName(context.Context, *MensajeToServidor) (*Respuesta, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateName not implemented")
-}
-func (UnimplementedConnToServidorFromInformanteServer) UpdateNumber(context.Context, *MensajeToServidor) (*Respuesta, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateNumber not implemented")
-}
-func (UnimplementedConnToServidorFromInformanteServer) AddCity(context.Context, *MensajeToServidor) (*Respuesta, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddCity not implemented")
-}
-func (UnimplementedConnToServidorFromInformanteServer) DeleteCity(context.Context, *MensajeToServidor) (*Respuesta, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteCity not implemented")
+func (UnimplementedConnToServidorFromInformanteServer) Comando(context.Context, *MensajeToServidor) (*Respuesta, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Comando not implemented")
 }
 func (UnimplementedConnToServidorFromInformanteServer) mustEmbedUnimplementedConnToServidorFromInformanteServer() {
 }
@@ -109,74 +67,20 @@ func RegisterConnToServidorFromInformanteServer(s grpc.ServiceRegistrar, srv Con
 	s.RegisterService(&ConnToServidorFromInformante_ServiceDesc, srv)
 }
 
-func _ConnToServidorFromInformante_UpdateName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ConnToServidorFromInformante_Comando_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MensajeToServidor)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConnToServidorFromInformanteServer).UpdateName(ctx, in)
+		return srv.(ConnToServidorFromInformanteServer).Comando(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.ConnToServidorFromInformante/UpdateName",
+		FullMethod: "/grpc.ConnToServidorFromInformante/Comando",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnToServidorFromInformanteServer).UpdateName(ctx, req.(*MensajeToServidor))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ConnToServidorFromInformante_UpdateNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MensajeToServidor)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConnToServidorFromInformanteServer).UpdateNumber(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/grpc.ConnToServidorFromInformante/UpdateNumber",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnToServidorFromInformanteServer).UpdateNumber(ctx, req.(*MensajeToServidor))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ConnToServidorFromInformante_AddCity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MensajeToServidor)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConnToServidorFromInformanteServer).AddCity(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/grpc.ConnToServidorFromInformante/AddCity",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnToServidorFromInformanteServer).AddCity(ctx, req.(*MensajeToServidor))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ConnToServidorFromInformante_DeleteCity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MensajeToServidor)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConnToServidorFromInformanteServer).DeleteCity(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/grpc.ConnToServidorFromInformante/DeleteCity",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConnToServidorFromInformanteServer).DeleteCity(ctx, req.(*MensajeToServidor))
+		return srv.(ConnToServidorFromInformanteServer).Comando(ctx, req.(*MensajeToServidor))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -189,20 +93,8 @@ var ConnToServidorFromInformante_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ConnToServidorFromInformanteServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "UpdateName",
-			Handler:    _ConnToServidorFromInformante_UpdateName_Handler,
-		},
-		{
-			MethodName: "UpdateNumber",
-			Handler:    _ConnToServidorFromInformante_UpdateNumber_Handler,
-		},
-		{
-			MethodName: "AddCity",
-			Handler:    _ConnToServidorFromInformante_AddCity_Handler,
-		},
-		{
-			MethodName: "DeleteCity",
-			Handler:    _ConnToServidorFromInformante_DeleteCity_Handler,
+			MethodName: "Comando",
+			Handler:    _ConnToServidorFromInformante_Comando_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

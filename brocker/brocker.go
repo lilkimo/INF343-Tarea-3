@@ -20,12 +20,13 @@ import (
 	//"google.golang.org/grpc/peer"
 )
 
-var address = [...]string{"localhost:50061", "localhost:50062", "localhost:50063"}
+var address = [...]string{"localhost:50061", "localhost:50063", "localhost:50065"}
+var address2 = [...]string{"localhost:50062", "localhost:50064", "localhost:50066"}
 //CAMBIAR A LAS DIRECCIONES DE LOS DISTINTOS SERVIDORES FULCRUM ej: dist14:puerto
 
 const (
 	portInformante = ":50051"
-	portLeia = "50052"
+	portLeia = ":50052"
 )
 
 type serverInformante struct {
@@ -33,6 +34,12 @@ type serverInformante struct {
 }
 type serverLeia struct {
 	pbLeia.UnimplementedConnToBrokerFromLeiaServer
+}
+
+func (s *serverInformante) ObtenerDireccion(ctx context.Context, in*pbInformante.MensajeToBrokerFromInformante) (*pbInformante.RespuestaInformante, error){
+
+	return &pbInformante.RespuestaInformante{Direccion: address2[0]}, nil
+
 }
 
 func (s *serverLeia) GetNumberRebelds (ctx context.Context, in *pbLeia.MensajeToBrokerFromLeia) (*pbLeia.RespuestaLeia, error) {

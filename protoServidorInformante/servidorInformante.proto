@@ -8,7 +8,7 @@ message MensajeToServidor {
     string comando = 1;
     string nombre_planeta = 2;
     string nombre_ciudad = 3;
-    int32 nuevo_valor = 4;
+    string nuevo_valor = 4;
 }
 
 message Respuesta{
@@ -18,8 +18,5 @@ message Respuesta{
 
 
 service ConnToServidorFromInformante {
-    rpc UpdateName (MensajeToServidor) returns (Respuesta);
-    rpc UpdateNumber (MensajeToServidor) returns (Respuesta);
-    rpc AddCity (MensajeToServidor) returns (Respuesta);
-    rpc DeleteCity (MensajeToServidor) returns (Respuesta);
+    rpc Comando (MensajeToServidor) returns (Respuesta);
 }

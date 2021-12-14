@@ -91,7 +91,7 @@ func main() {
 			if err != nil {
 				log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
 			}
-
+			fmt.Println(rS.GetNumeroRebeldes())
 			cantRebeldes := rS.GetNumeroRebeldes()
 			reloj := rS.GetVector()
 			ip := rS.GetIpServidorFulcrum()

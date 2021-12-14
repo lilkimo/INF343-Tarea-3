@@ -47,6 +47,7 @@ func (s *serverBroker) LeiaGetNumberRebelds(ctx context.Context, in *pbBroker.Me
 	str := strings.Split(regciudad, " ")
 	fmt.Println(str[2])
 	n, _ := strconv.Atoi(str[2])
+	fmt.Println(n)
 	for _,vector := range vectores {
 		if vector.planeta == in.NombrePlaneta {
 			v = vector.vector

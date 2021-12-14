@@ -11,7 +11,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if _, err := f.Write([]byte("appended some data\n")); err != nil {
+	if _, err := f.WriteString("appended some data\n"); err != nil {
 		log.Fatal(err)
 	}
 	if err := f.Close(); err != nil {

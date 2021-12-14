@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	//"fmt"
 	"log"
 	"math/rand"
 
@@ -56,7 +56,6 @@ func (s *serverLeia) GetNumberRebelds (ctx context.Context, in *pbLeia.MensajeTo
 		defer conn.Close()
 		c := pbFulcrum.NewConnToServidorFromBrokerClient(conn)
 		r, err := c.LeiaGetNumberRebelds(context.Background(), &pbFulcrum.MensajeLeia{Comando: in.Comando, NombrePlaneta: in.NombrePlaneta, NombreCiudad: in.NombreCiudad})
-		fmt.Println(r.NumeroRebeldes)
 		return &pbLeia.RespuestaLeia{NumeroRebeldes: r.NumeroRebeldes, Vector: r.Vector, IpServidorFulcrum: r.IpServidorFulcrum}, nil
 
 	} else {

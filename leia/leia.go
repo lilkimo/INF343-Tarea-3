@@ -20,7 +20,7 @@ const (
 )
 
 type data struct {
-	cantRebeldes int32
+	cantRebeldes string
 	reloj [] int32
 	servidor string
 }
@@ -79,7 +79,7 @@ func main() {
 
 			if (val.reloj[direccionToId[ip]] <= reloj[direccionToId[ip]]){
 				val.cantRebeldes = cantRebeldes
-				fmt.Printf("Cantidad de rebeldes %d\n", cantRebeldes)
+				fmt.Printf("Cantidad de rebeldes %s\n", cantRebeldes)
 				val.reloj = reloj
 				val.servidor = ip
 			} else {
@@ -97,7 +97,7 @@ func main() {
 			ip := rS.GetIpServidorFulcrum()
 
 			val.cantRebeldes = cantRebeldes
-			fmt.Printf("Cantidad de rebeldes %d\n", cantRebeldes)
+			fmt.Printf("Cantidad de rebeldes %s\n", cantRebeldes)
 			val.reloj = reloj
 			val.servidor = ip
 		}

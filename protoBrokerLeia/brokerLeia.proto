@@ -12,7 +12,7 @@ message MensajeToBrokerFromLeia{
 }
 
 message RespuestaLeia {
-    int32 numero_rebeldes = 1;
+    string numero_rebeldes = 1;
     repeated int32 vector = 2;
     string ip_servidor_fulcrum = 3;
 }

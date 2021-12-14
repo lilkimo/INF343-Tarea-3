@@ -7,14 +7,14 @@ sv2:
 sv3:
 	go run servidores/servidor3.go
 
-almirante: 
+Almirante: 
 	go run informantes/almirante.go
 
-brocker:
+Brocker:
 	go run brocker/brocker.go
 
-leia: 
-	go run informantes/leia.go
+Leia: 
+	go run leia/leia.go
 
-tano:
+Tano:
 	go run informantes/tano.go

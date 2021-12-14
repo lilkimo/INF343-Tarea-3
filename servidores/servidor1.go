@@ -65,7 +65,7 @@ func (s *serverInformante) Comando (ctx context.Context, in *pbInformante.Mensaj
 		}
 	}
 
-	return &pbInformante.Respuesta{Vector: vct, IpServidorFulcrum: "localhost"+portInformante}, nil
+	return &pbInformante.Respuesta{Vector: vct, IpServidorFulcrum: "dist13"+portInformante}, nil
 }
 
 func valueInSlice(value string, list []string) bool {

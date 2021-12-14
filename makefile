@@ -7,7 +7,7 @@ sv2:
 sv3:
         go run servidores/servidor3.go
 
-alm: 
+almirante: 
 	go run informantes/almirante.go
 
 broker:

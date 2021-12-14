@@ -121,10 +121,8 @@ func main() {
 			val.servidor = ip
 			val.comandos = append(val.comandos, strcmd)
 		} else {
-			fmt.Println("a")
 			rS, err := c.ObtenerDireccion(ctx, &pbBroker.MensajeToBrokerFromInformante{IpServidorFulcrum: "vacia"})
 			ip := rS.Direccion
-			fmt.Println("b")
 			if err != nil {
 				log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
 			}

@@ -10,7 +10,7 @@ sv3:
 almirante: 
 	go run informantes/almirante.go
 
-broker:
+brocker:
         go run brocker/brocker.go
 
 leia: 

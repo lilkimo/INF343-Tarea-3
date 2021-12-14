@@ -26,7 +26,6 @@ type data struct {
 }
 
 func main() {
-
 	direccionToId := make(map[string]int)
 	direccionToId["localhost:50061"] = 0
 	direccionToId["localhost:50062"] = 1
@@ -51,52 +50,56 @@ func main() {
 	var arg1 string;
 	var arg2 string;
 
+	fmt.Println("Presione ENTER sin ingresar un comando pasa salir")
 	for {
-		fmt.Print("Ingrese comando: ")
-		fmt.Scanf("%s %s %s\n", &comando, &arg1, &arg2)
-		if (comando != "GetNumberRebelds") || (arg1 == "") || (arg2 == "") {
-			fmt.Println("Entrada inválida, intente nuevamente.")
+		for {
+			fmt.Scanf("Ingrese comando: %s %s %s\n", &comando, &arg1, &arg2)
+			if (comando == "") && (arg1 == "") && (arg2 == "") {
+				return
+			} else if (comando != "GetNumberRebelds") || (arg1 == "") || (arg2 == "") {
+				fmt.Println("Entrada inválida, intente nuevamente.")
+			} else {
+				break
+			}
+		}
+
+		// Asumo que dos ciudades, aunque estén en diferentes planetas),
+		// no pueden tener el mismo nombre.
+		val, ok := informacion[arg1]
+		if ok {
+			// Aquí habría que aplicar Monotonic Reads, ni idea de cómo la verdad xd.
+			// Me imagino que hay que revisar el reloj o weás así no sé nada xuxetumare.
+			rS, err := c.GetNumberRebelds(ctx, &pb.MensajeToBrokerFromLeia{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, IpServidorFulcrum: val.servidor})
+			if err != nil {
+				log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
+			}
+			cantRebeldes := rS.GetNumeroRebeldes()
+			reloj := rS.GetVector()
+			ip := rS.GetIpServidorFulcrum()
+
+			if (val.reloj[direccionToId[ip]] <= reloj[direccionToId[ip]]){
+				val.cantRebeldes = cantRebeldes
+				val.reloj = reloj
+				val.servidor = ip
+			} else {
+				fmt.Println("Inconsistencia encontrada")
+			}
 		} else {
-			break
-		}
-	}
+			// Si la weá no existe la chanta así tal cual. 
+			rS, err := c.GetNumberRebelds(ctx, &pb.MensajeToBrokerFromLeia{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, IpServidorFulcrum: "vacia"})
+			if err != nil {
+				log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
+			}
+			cantRebeldes := rS.GetNumeroRebeldes()
+			reloj := rS.GetVector()
+			ip := rS.GetIpServidorFulcrum()
 
-	// Asumo que dos ciudades, aunque estén en diferentes planetas),
-	// no pueden tener el mismo nombre.
-	val, ok := informacion[arg1]
-	if ok {
-		// Aquí habría que aplicar Monotonic Reads, ni idea de cómo la verdad xd.
-		// Me imagino que hay que revisar el reloj o weás así no sé nada xuxetumare.
-		rS, err := c.GetNumberRebelds(ctx, &pb.MensajeToBrokerFromLeia{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, IpServidorFulcrum: val.servidor})
-		if err != nil {
-			log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
-		}
-		cantRebeldes := rS.GetNumeroRebeldes()
-		reloj := rS.GetVector()
-		ip := rS.GetIpServidorFulcrum()
-
-		if (val.reloj[direccionToId[ip]] <= reloj[direccionToId[ip]]){
 			val.cantRebeldes = cantRebeldes
 			val.reloj = reloj
 			val.servidor = ip
-		} else {
-			fmt.Println("Inconsistencia encontrada")
 		}
-	} else {
-		// Si la weá no existe la chanta así tal cual. 
-		rS, err := c.GetNumberRebelds(ctx, &pb.MensajeToBrokerFromLeia{Comando: comando, NombrePlaneta: arg1, NombreCiudad: arg2, IpServidorFulcrum: "vacia"})
-		if err != nil {
-			log.Fatalf("Hubo un error con el envío o proceso de la solicitud: %v", err)
-		}
-		cantRebeldes := rS.GetNumeroRebeldes()
-		reloj := rS.GetVector()
-		ip := rS.GetIpServidorFulcrum()
-
-		val.cantRebeldes = cantRebeldes
-		val.reloj = reloj
-		val.servidor = ip
+		informacion[arg2] = val
 	}
-	informacion[arg2] = val
 }
 
 

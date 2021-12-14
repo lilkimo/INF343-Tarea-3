@@ -1,12 +1,14 @@
 package main
 
 import (
+	"io/ioutil"
 	"os"
 )
 
 func main() {
-	f, _ := os.OpenFile("zarkoPichula.txt", os.O_APPEND|os.O_CREATE, os.ModePerm)
+	err := ioutil.WriteFile("zarkoPichula.txt", []byte("pichula"), os.ModeAppend)
 
-	f.WriteString("pichula")
-	f.Close()
+	if err != nil {
+		panic(err)
+	}
 }

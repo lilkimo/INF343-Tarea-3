@@ -26,9 +26,9 @@ type data struct {
 
 func main() {
 	direccionToId := make(map[string]int)
-	direccionToId["localhost:50062"] = 0
-	direccionToId["localhost:50064"] = 1
-	direccionToId["localhost:50066"] = 2
+	direccionToId["dist13:50062"] = 0
+	direccionToId["dist14:50064"] = 1
+	direccionToId["dist15:50066"] = 2
 	
 	conexiones := make([]pbFulcrum.ConnToServidorFromInformanteClient,3)
 

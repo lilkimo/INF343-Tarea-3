@@ -103,8 +103,8 @@ func command(comando string, planeta string, ciudad string, valor string) {
 				break
 			}
 		}
-		valor,_ := strconv.Atoi(valor)
-		AddCity(planeta, ciudad, int32(valor))
+		valor2,_ := strconv.Atoi(valor)
+		AddCity(planeta, ciudad, int32(valor2))
 		succ = true
 
 	} else if comando == "UpdateName" {
@@ -121,8 +121,9 @@ func command(comando string, planeta string, ciudad string, valor string) {
 	} else {
 		if city_exists(planeta, ciudad) {
 			if comando == "UpdateNumber" {
-				valor, _ := strconv.Atoi(valor)
-				UpdateNumber(planeta, ciudad, int32(valor))
+				valor2, _ := strconv.Atoi(valor)
+				UpdateNumber(planeta, ciudad, int32(valor2))
+
 				succ = true
 				for _, vector := range vectores{
 					if vector.planeta == planeta {
@@ -147,8 +148,7 @@ func command(comando string, planeta string, ciudad string, valor string) {
 			log_planetas = append(log_planetas, planeta)
 			f.Close()
 		}
-		valor,_ := strconv.Atoi(valor)
-		logPlanetario(comando, planeta, ciudad, int32(valor))
+		logPlanetario(comando, planeta, ciudad, valor)
 	}
 }
 
@@ -239,23 +239,24 @@ func UpdateName(planeta string, ciudad string, nuevo_valor string) {
 	check(err)
 }
 
-func logPlanetario(comando string, planeta string, ciudad string, valor int32) {
+func logPlanetario(comando string, planeta string, ciudad string, valor string) {
 	filename := fmt.Sprintf("servidores/%s.log", planeta)
 	var str string
 
 	if comando == "UpdateNumber" {
-		str = fmt.Sprintf("%s %s %s %d\n", comando, planeta, ciudad, valor)
+		valor2,_ := strconv.Atoi(valor)
+		str = fmt.Sprintf("%s %s %s %d\n", comando, planeta, ciudad, int32(valor2))
 
 	} else if comando == "AddCity" {
-		if valor >= 0 {
-			str = fmt.Sprintf("%s %s %s %d\n", comando, planeta, ciudad, valor)
+		valor2,_ := strconv.Atoi(valor)
+		if valor2 >= 0 {
+			str = fmt.Sprintf("%s %s %s %d\n", comando, planeta, ciudad, int32(valor2))
 		} else {
 			str = fmt.Sprintf("%s %s %s\n", comando, planeta, ciudad)
 		}
 
 	} else if comando == "UpdateName" {
-		split := strings.Split(ciudad, ":")
-		str = fmt.Sprintf("%s %s %s\n", comando, split[0], split[1])
+		str = fmt.Sprintf("%s %s %s\n", comando, ciudad, valor)
 
 	} else if comando == "DeleteCity" {
 		str = fmt.Sprintf("%s %s %s\n", comando, planeta, ciudad)

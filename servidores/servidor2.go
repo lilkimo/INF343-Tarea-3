@@ -157,7 +157,7 @@ func get_city_data(planeta string, ciudad string) string {
 	filename := fmt.Sprintf("servidores/%s.txt", planeta)
 	var curr, curr_planet, curr_city string
 	var num int32
-	f, err := os.ReadFile(filename)
+	f, err := ioutil.ReadFile(filename)
 	check(err)
 
 	scanner := bufio.NewScanner(strings.NewReader(string(f)))
@@ -174,7 +174,7 @@ func get_city_data(planeta string, ciudad string) string {
 
 func city_exists(planeta string, ciudad string) bool {
 	filename := fmt.Sprintf("servidores/%s.txt", planeta)
-	f, err := os.ReadFile(filename)
+	f, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return false
 	}
@@ -189,7 +189,7 @@ func city_exists(planeta string, ciudad string) bool {
 func DeleteCity(planeta string, ciudad string) {
 
 	filename := fmt.Sprintf("servidores/%s.txt", planeta)
-	f, err := os.ReadFile(filename)
+	f, err := ioutil.ReadFile(filename)
 	check(err)
 
 	city := get_city_data(planeta, ciudad)
@@ -214,7 +214,7 @@ func AddCity(planeta string, ciudad string, valor int32) {
 
 func UpdateNumber(planeta string, ciudad string, nuevo_valor int32) {
 	filename := fmt.Sprintf("servidores/%s.txt", planeta)
-	ft, err := os.ReadFile(filename)
+	ft, err := ioutil.ReadFile(filename)
 	check(err)
 
 	city := get_city_data(planeta, ciudad)
@@ -228,7 +228,7 @@ func UpdateNumber(planeta string, ciudad string, nuevo_valor int32) {
 
 func UpdateName(planeta string, ciudad string, nuevo_valor string) {
 	filename := fmt.Sprintf("servidores/%s.txt", planeta)
-	f, err := os.ReadFile(filename)
+	f, err := ioutil.ReadFile(filename)
 	check(err)
 
 	city := get_city_data(planeta, ciudad)

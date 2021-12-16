@@ -202,7 +202,7 @@ func DeleteCity(planeta string, ciudad string) {
 func AddCity(planeta string, ciudad string, valor int32) {
 	filename := fmt.Sprintf("servidores/%s.txt", planeta)
 
-	f, err := os.OpenFile(filename, os.O_APPEND, 0600)
+	f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	check(err)
 	str := fmt.Sprintf("%s %s %d\n", planeta, ciudad, valor)
 	f.WriteString(str)
@@ -262,7 +262,7 @@ func logPlanetario(comando string, planeta string, ciudad string, valor string) 
 		str = fmt.Sprintf("%s %s %s\n", comando, planeta, ciudad)
 	}
 
-	f, err := os.OpenFile(filename, os.O_APPEND, 0600)
+	f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	check(err)
 	f.WriteString(str)
 	f.Close()
